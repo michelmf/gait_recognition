@@ -10,7 +10,6 @@ Realizei algumas alterações nos fluxos para atender às necessidades específi
 
 No total, existem 124 pessoas com silhuetas capturadas de de diversas formas e ângulos. Segue abaixo a estrutura vista no dataset CASIA-B 
 
-. CASIA-B Dataset
 .
 +-- 001
 |   +-- bg-01
