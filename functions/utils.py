@@ -1,4 +1,5 @@
 # Funções para auxílio da execução da criação dos GEIs
+from glob import glob
 
 # Variáveis para auxiliar no processamento das imagens
 SUBJECT        = [str(subject).zfill(3) for subject in range(1,125)] # de 001 a 124

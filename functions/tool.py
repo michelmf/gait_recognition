@@ -38,7 +38,6 @@ def shift_left(img, left=10.0, is_grey=True):
 
     return img_shift_left
 
-
 def shift_right(img, right=10.0):
     return shift_left(img, -right)
 
@@ -69,7 +68,6 @@ def shift_up(img, up=10.0, is_grey=True):
 
     return img_shift_up
 
-
 def shift_down(img, down=10.0):
     return shift_up(img, -down)
 
@@ -88,7 +86,6 @@ def image_path_list_to_image_pic_list(image_path_list):
         im = imread(image_path)
         image_pic_list.append(im)
     return image_pic_list
-
 
 def extract_human(img):
     """
@@ -135,10 +132,9 @@ def extract_human(img):
     img = shift_down(img, down_blank)
     return img
 
-
 def center_person(img, size, method="simple"):
     """
-    :param img: grey image, numpy.array datatype
+    :param img: gray image, numpy.array datatype
     :param size: tuple, for example(120, 160), first number for height, second for width
     :param method: string, can be 'sample', or 'gravity'
     :return:
@@ -203,7 +199,7 @@ def build_GEI(img_list):
 
     for img in img_list:
         try:
-            human_extract_list.append(center_person(extract_human(imread(img)), (norm_height, norm_width)))
+            human_extract_list.append(center_person(extract_human(img), (norm_height, norm_width)))
 
         except:
             print("fail to extract human from image")
@@ -221,27 +217,30 @@ def img_path_to_GEI(img_path):
     :param img_path: string
     :return: a GEI image
     """
-    id = img_path.replace("\\", "_")
-    cache_file = "%s/%s_GEI.npy" % (config.Project.test_data_path, id)
-    if os.path.exists(cache_file) and os.path.isfile(cache_file):
-        return np.load(cache_file)
+    # id = img_path.replace("\\", "_")
+
+    # print(id)
+    # cache_file = r"%s\%s_GEI.npy" % (root_path, id)
+    # print(cache_file)
+
+    # if os.path.exists(cache_file) and os.path.isfile(cache_file):
+    #     return np.load(cache_file)
+        
     img_list = load_image_path_list(img_path)
     img_data_list = image_path_list_to_image_pic_list(img_list)
     GEI_image = build_GEI(img_data_list)
-    np.save(cache_file, GEI_image)
     return GEI_image
 
+# if __name__ == '__main__':
 
-if __name__ == '__main__':
+#     #import config
+#     img = imread(r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\dataset\002\002\fb00\079.png', as_grey=True)
+
+#     extract_human_img = extract_human(img)
+#     human_extract_center = center_person(extract_human_img, (210, 70))
+
+#     imsave(r"C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\origin_img.bmp"    , img)
+#     imsave(r"C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\extract_human.bmp" , extract_human_img)
     
-    #import config
-    img = imread(r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\dataset\002\002\fb00\079.png', as_grey=True)
-
-    extract_human_img = extract_human(img)
-    human_extract_center = center_person(extract_human_img, (210, 70))
-
-    imsave(r"C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\origin_img.bmp"    , img)
-    imsave(r"C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\extract_human.bmp" , extract_human_img)
-    
-    GEI_image = img_path_to_GEI(r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\dataset\002\002\fb00')
-    imsave("%s\GEI.bmp" % r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\GEIs', GEI_image)
+#     GEI_image = img_path_to_GEI(r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\dataset\002\002\fb00')
+#     imsave("%s\GEI.bmp" % r'C:\Users\PICHAU\Documents\Projetos\gait-energy-image-recognition\GEIs', GEI_image)
