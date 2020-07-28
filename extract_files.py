@@ -2,6 +2,7 @@
 import os
 import tarfile
 import configparser
+from tqdm import tqdm
 from glob import glob
 
 # Leitura do arquivo de configuração para extração do root path
@@ -14,9 +15,11 @@ tar_files = glob(os.path.join(root_path,'*.tar.gz'))
 os.chdir(root_path) # Altera para a pasta onde se encontram os tar.gz
 
 # extração
-for tar_file in tar_files:
-    tar = tarfile.open(tar_file, 'r:gz')
-    tar.extractall()
-    tar.close()
+with tqdm(total=len(tar_files)) as pbar:
+    for tar_file in tar_files:
+        tar = tarfile.open(tar_file, 'r:gz')
+        tar.extractall()
+        tar.close()
+        pbar.update(1)
 
 print('Done.')

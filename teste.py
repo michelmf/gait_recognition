@@ -3,6 +3,7 @@
 ####################################################################################
 
 # Manipulação de Imagens
+import numpy as np
 from skimage.io import imread, imsave, imshow
 from scipy.misc import imresize
 
@@ -10,11 +11,16 @@ from scipy.misc import imresize
 import os
 import configparser
 from glob import glob
+from tqdm import tqdm
 
 # Helpers
 from functions      import utils
 from functions.tool import *
 from time           import sleep
+
+# Desativa warnings
+import warnings
+warnings.simplefilter("ignore", UserWarning)
 
 ####################################################################################
 ### Configuração                                                
@@ -66,22 +72,40 @@ print('#########################################################################
 ### Processamento de Imagens                                          
 ####################################################################################
 
-# # 1. Função load_image_path_list: Leitura das imagens dada uma pasta específica
-print(f'Arquivos encontrados na pasta {os.path.join(root_path, image_paths[0])}')
-print(load_image_path_list(os.path.join(root_path, image_paths[0])))
-img_files = os.path.join(root_path, image_paths[0])
-print('####################################################################################################################################################################################')
-
-# # 2. Função image_path_list_to_image_pic_list: imread das imagens encontradas na função acima
-print(f'Arquivos encontrados na pasta {os.path.join(root_path, image_paths[0])}')
-print(f'Quantidade de imagens encontradas: {len(image_path_list_to_image_pic_list(img_files))}')
-# imgs = image_path_list_to_image_pic_list(img_files)
+# # # 1. Função load_image_path_list: Leitura das imagens dada uma pasta específica
+# print(f'Arquivos encontrados na pasta {os.path.join(root_path, image_paths[0])}')
+# print(load_image_path_list(os.path.join(root_path, image_paths[0])))
+# img_files = os.path.join(root_path, image_paths[0])
 # print('####################################################################################################################################################################################')
+
+# # # 2. Função image_path_list_to_image_pic_list: imread das imagens encontradas na função acima
+# print(f'Arquivos encontrados na pasta {os.path.join(root_path, image_paths[0])}')
+# print(f'Quantidade de imagens encontradas: {len(image_path_list_to_image_pic_list(load_image_path_list(img_files)))}')
+# imgs = image_path_list_to_image_pic_list(load_image_path_list(img_files))
+# # print('####################################################################################################################################################################################')
 
 # # 3. Função build_GEI: Crop e sobreposição das imagens
 # gei_image = build_GEI(imgs)
 
-# for path in image_paths:
-#     os.makedirs(os.path.join(output_path,path),0o666)
-#     imsave(os.path.join(output_path,path,'gei_final.bmp'), gei_image)
-# #####################################################################################
+with tqdm(total=len(image_paths)) as pbar:
+    for path in image_paths:
+        
+        img_files = os.path.join(root_path, path)
+        imgs = image_path_list_to_image_pic_list(load_image_path_list(img_files))
+        gei_image = build_GEI(imgs)
+
+        try:
+            os.makedirs(os.path.join(output_path,path),0o666)
+            imsave(os.path.join(output_path, path, 'gei_final.bmp'), gei_image)
+        
+        except FileExistsError:
+            imsave(os.path.join(output_path, path, 'gei_final.bmp'), gei_image)
+        
+        finally:
+            pbar.update(1)
+            print(f'\nGEI {path} Finalizada')
+        
+        
+    
+    
+
